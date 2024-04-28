@@ -1,0 +1,19 @@
+
+  mat-toolbar{
+    width: 100%;
+  }   
+  
+  mat-card {
+    width: 100%;
+
+    table {
+      width: 100%;
+    }
+
+    mat-form-field {
+      width: 200px;
+      margin-top: 0.5rem;
+      margin-left: auto;
+      display: inline-flex;
+    }
+  }
