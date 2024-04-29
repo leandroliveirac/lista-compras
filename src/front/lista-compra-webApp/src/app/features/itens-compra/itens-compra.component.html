@@ -1,7 +1,3 @@
-<mat-toolbar>
-    <span>Minha Lista de Compras</span>
-</mat-toolbar>
-
 
 <mat-card>
     <mat-form-field>
@@ -20,21 +16,32 @@
         </ng-container>
         <ng-container matColumnDef="quantidade">
             <th mat-header-cell *matHeaderCellDef>Quant.</th>
-            <td mat-cell *matCellDef="let element"><input type="text" style="width:30px;"></td>
+            <td mat-cell *matCellDef="let element; let i = index">
+                <mat-form-field floatLabel="always" style="width: 4rem;">
+                    <input id="input-quantidade{{i}}" matInput type="number" class="example-right-align" placeholder="0" min="0" (blur)="atualizarSubTotal($event)">
+                </mat-form-field>
+            </td>
         </ng-container>
         <ng-container matColumnDef="valorUnitario">
             <th mat-header-cell *matHeaderCellDef>Valor unitário</th>
-            <td mat-cell *matCellDef="let element"><input type="text" style="width:30px;"></td>
+            <td mat-cell *matCellDef="let element, let i = index">
+                <mat-form-field floatLabel="always" style="width: 8rem;">
+                    <input id="input-valorUnitario{{i}}" matInput type="number" class="example-right-align" placeholder="0" min="0" (blur)="atualizarSubTotal($event)">
+                    <span matTextPrefix>R$&nbsp;</span>
+                </mat-form-field>
+            </td>
         </ng-container>
-        <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef>Total</th>
-            <td mat-cell *matCellDef="let element">{{element.total}}</td>
+        <ng-container matColumnDef="subTotal">
+            <th mat-header-cell *matHeaderCellDef>Sub Total</th>
+            <td id="subTotal{{i}}" mat-cell *matCellDef="let element; let i = index">
+                R$ {{element.subTotal}}
+            </td>
         </ng-container>
-        <ng-container matColumnDef="deleteEmployee">
+        <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-                <!-- <span class="material-symbols-outlined" style="margin-right: 0.5rem;">edit</span> -->
-                <span class="material-symbols-outlined" style="cursor: pointer;" (click)="removeData($event)">delete</span>                               
+                <input type="hidden" id="itemId" name="itemId" value="{{element._id}}">
+                <span class="material-symbols-outlined" style="cursor: pointer;" (click)="limparDados($event)" title="Limpar">backspace</span>                               
             </td>
         </ng-container>
 
@@ -46,3 +53,5 @@
 
     </table>
 </mat-card>
+
+<div><span>Total: </span><span>{{total}}</span></div>

@@ -4,5 +4,5 @@ export interface Itens {
     nomeProduto: string
     quantidade: number,
     valorUnitario: number,
-    total: number
+    subTotal: number
 }
