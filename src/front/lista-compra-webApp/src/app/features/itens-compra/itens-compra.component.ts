@@ -3,8 +3,9 @@ import {MatTable, MatTableDataSource,MatTableModule} from '@angular/material/tab
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
-
+import { RouterModule } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 
 import { Itens } from './interfaces/itens';
@@ -18,7 +19,15 @@ const source: Itens[] = [
 @Component({
   selector: 'app-itens-compra',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule,MatCardModule,MatIconModule],
+  imports: [
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatTableModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
+  ],
   templateUrl: './itens-compra.component.html',
   styleUrl: './itens-compra.component.scss'
 })
@@ -37,14 +46,15 @@ export class ItensCompraComponent {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource .filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   limparDados(event: Event) {
     const el = event.target as HTMLElement;
 
     const tableRow = el.closest('tr');
-    const itemId = this.obterItemId(tableRow); 
+    const itemId = this.obterItemId(tableRow);
+
     this.AtualizarObjSource(itemId, 0, 0, 0);
 
     this.alterarValorInputQuantidade(tableRow);
@@ -82,15 +92,15 @@ export class ItensCompraComponent {
   }
 
   private AtualizarObjSource(itemId: number, quant: number, valorUnitario: number, subTotal: number) {
+    
     source.map((obj) => {
       if (parseInt(obj._id) == itemId) {
         obj.quantidade = quant;
         obj.valorUnitario = valorUnitario,
           obj.subTotal = subTotal;
-      }
-
+      }      
     });
-
+    
     this.CalcularTotal();
   }
 
@@ -131,7 +141,7 @@ export class ItensCompraComponent {
 
     const input = tableRow?.querySelectorAll('td')[3].querySelector('input') as HTMLInputElement;
 
-    this.renderer.setProperty(input,'value',valor);
+    this.renderer.setProperty(input,'value',valor.toFixed(2));
   }
 
   private obterItemId(tableRow: HTMLTableRowElement | null) : number

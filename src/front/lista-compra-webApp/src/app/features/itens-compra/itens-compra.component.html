@@ -1,3 +1,17 @@
+<button mat-icon-button color="primary" [routerLink]="['/home']">
+    <mat-icon>home</mat-icon>
+</button>
+<mat-card id="card-total-compra">
+    <mat-card-header>
+        <mat-card-title>Total da compra</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <span>R$ {{total.toFixed(2)}}</span>
+    </mat-card-content>
+    <mat-card-footer>
+        <span class="material-symbols-outlined">payments</span>
+    </mat-card-footer>
+</mat-card>
 
 <mat-card>
     <mat-form-field>
@@ -7,41 +21,45 @@
     <table mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="categoria">
-            <th mat-header-cell *matHeaderCellDef>Categoria</th>
-            <td mat-cell *matCellDef="let element">{{element.categoria}}</td>
+            <th mat-header-cell *matHeaderCellDef>CATEGORIA</th>
+            <td mat-cell *matCellDef="let element">{{ element.categoria.toUpperCase ()}}</td>
         </ng-container>
         <ng-container matColumnDef="nomeProduto">
-            <th mat-header-cell *matHeaderCellDef>Produto</th>
-            <td mat-cell *matCellDef="let element">{{element.nomeProduto}}</td>
+            <th mat-header-cell *matHeaderCellDef>PRODUTO</th>
+            <td mat-cell *matCellDef="let element">{{element.nomeProduto.toUpperCase()}}</td>
         </ng-container>
         <ng-container matColumnDef="quantidade">
-            <th mat-header-cell *matHeaderCellDef>Quant.</th>
+            <th mat-header-cell *matHeaderCellDef>QUANTIDADE</th>
             <td mat-cell *matCellDef="let element; let i = index">
-                <mat-form-field floatLabel="always" style="width: 4rem;">
-                    <input id="input-quantidade{{i}}" matInput type="number" class="example-right-align" placeholder="0" min="0" (blur)="atualizarSubTotal($event)">
+                <mat-form-field floatLabel="always" style="width: 5rem;">
+                    <input id="input-quantidade{{i}}" matInput type="number" class="example-right-align" placeholder="0"
+                        min="0" (change)="atualizarSubTotal($event)" [value]="element.quantidade">
                 </mat-form-field>
             </td>
         </ng-container>
         <ng-container matColumnDef="valorUnitario">
-            <th mat-header-cell *matHeaderCellDef>Valor unitário</th>
+            <th mat-header-cell *matHeaderCellDef>VALOR UNITÁRIO</th>
             <td mat-cell *matCellDef="let element, let i = index">
                 <mat-form-field floatLabel="always" style="width: 8rem;">
-                    <input id="input-valorUnitario{{i}}" matInput type="number" class="example-right-align" placeholder="0" min="0" (blur)="atualizarSubTotal($event)">
+                    <input id="input-valorUnitario{{i}}" matInput type="number" class="example-right-align"
+                        placeholder="0,00" min="0" (change)="atualizarSubTotal($event)"
+                        [value]="element.valorUnitario.toFixed(2)">
                     <span matTextPrefix>R$&nbsp;</span>
                 </mat-form-field>
             </td>
         </ng-container>
         <ng-container matColumnDef="subTotal">
-            <th mat-header-cell *matHeaderCellDef>Sub Total</th>
+            <th mat-header-cell *matHeaderCellDef>TOTAL</th>
             <td id="subTotal{{i}}" mat-cell *matCellDef="let element; let i = index">
-                R$ {{element.subTotal}}
+                R$ {{element.subTotal.toFixed(2)}}
             </td>
         </ng-container>
         <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
                 <input type="hidden" id="itemId" name="itemId" value="{{element._id}}">
-                <span class="material-symbols-outlined" style="cursor: pointer;" (click)="limparDados($event)" title="Limpar">backspace</span>                               
+                <span class="material-symbols-outlined" style="cursor: pointer;" (click)="limparDados($event)"
+                    title="Limpar">backspace</span>
             </td>
         </ng-container>
 
@@ -53,5 +71,3 @@
 
     </table>
 </mat-card>
-
-<div><span>Total: </span><span>{{total}}</span></div>

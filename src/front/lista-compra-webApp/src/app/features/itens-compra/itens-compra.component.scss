@@ -1,19 +1,56 @@
+mat-toolbar {
+  width: 100%;
+}
 
-  mat-toolbar{
-    width: 100%;
-  }   
-  
-  mat-card {
-    width: 100%;
+#card-total-compra {
+  background: greenyellow;
+  margin: 0.75rem;
+  height: 8rem;
+  width: 200px;
 
-    table {
-      width: 100%;
-    }
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas: "header header header"
+    "content content footer"
 
-    mat-form-field {
-      width: 200px;
-      margin-top: 0.5rem;
-      margin-left: auto;
-      display: inline-flex;
-    }
-  }
+}
+
+mat-card-header {
+  grid-area: header;
+}
+
+mat-card-content {
+  font-size: 1.5rem;
+  grid-area: content;
+  align-self: flex-end;
+  margin: 0.5rem;
+}
+
+mat-card-footer {
+  grid-area: footer;
+  align-self: flex-end;
+  margin-right: 0.5rem;
+}
+
+mat-card {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-table {
+  overflow-x: scroll;
+}
+
+mat-form-field {
+  width: 200px;
+  margin-top: 0.5rem;
+  margin-left: auto;
+  display: inline-flex;
+}
+
+mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
