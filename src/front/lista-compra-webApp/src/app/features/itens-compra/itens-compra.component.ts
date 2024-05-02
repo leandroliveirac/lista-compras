@@ -6,15 +6,11 @@ import {MatCardModule} from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-
-
 import { Itens } from './interfaces/itens';
-
-const source: Itens[] = [
-  {_id:'1',categoria:'Bebidas',nomeProduto:'suco de uva',quantidade:0,valorUnitario:0,subTotal:0},
-  {_id:'2',categoria:'Higiene',nomeProduto:'sabonete',quantidade:0,valorUnitario:0,subTotal:0},
-  {_id:'3',categoria:'Frutas e legumes',nomeProduto:'Abacaxi',quantidade:0,valorUnitario:0,subTotal:0}
-];
+import { ListaComprasService } from '../../shared/services/lista-compras.service';
+import { Observable, map, take, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-itens-compra',
@@ -27,19 +23,34 @@ const source: Itens[] = [
     MatIconModule,
     MatButtonModule,
     RouterModule,
+    CommonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './itens-compra.component.html',
   styleUrl: './itens-compra.component.scss'
 })
 export class ItensCompraComponent {
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private listaComprasService: ListaComprasService) {}
 
-  total: number = 0;
+  private source : Itens[] = [];
 
+  total: number = 0;  
 
-  displayedColumns: string[] = ['categoria', 'nomeProduto', 'quantidade', 'valorUnitario', 'subTotal','acoes'];
-  dataSource  = new MatTableDataSource(source);
+  displayedColumns: string[] = ['categoria', 'produto', 'quantidade', 'valorUnitario', 'subTotal','acoes'];
+
+  dataSource  = new MatTableDataSource<Itens>(); 
+  
+  dataSource$ : Observable<MatTableDataSource<Itens>> = this.listaComprasService.obterItensCompra()
+    .pipe (
+      map( resp => {
+        this.source = resp;
+        const dataSource = this.dataSource;        
+        dataSource.data = this.source;
+        return dataSource;
+      }),
+      take(1)
+    );
 
   @ViewChild(MatTable)
   table!: MatTable<Itens>;
@@ -93,8 +104,8 @@ export class ItensCompraComponent {
 
   private AtualizarObjSource(itemId: number, quant: number, valorUnitario: number, subTotal: number) {
     
-    source.map((obj) => {
-      if (parseInt(obj._id) == itemId) {
+    this.source.map((obj) => {
+      if (parseInt(obj.id) == itemId) {
         obj.quantidade = quant;
         obj.valorUnitario = valorUnitario,
           obj.subTotal = subTotal;
@@ -157,8 +168,8 @@ export class ItensCompraComponent {
   {
     this.total = 0;
 
-    source.forEach((obj) => {
-      this.total += obj.subTotal
+    this.source.forEach((obj) => {
+      this.total += isNaN(obj.subTotal) ? 0 : obj.subTotal
     });
   }
 }
