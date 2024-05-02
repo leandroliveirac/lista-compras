@@ -486,3 +486,7 @@ $RECYCLE.BIN/
 #Angular
 *.angular
 dist
+
+
+#ASP NET CORE
+.mono
