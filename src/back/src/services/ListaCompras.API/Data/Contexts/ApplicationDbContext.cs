@@ -5,7 +5,8 @@ namespace ListaCompras.API.Data.Contexts
 {
     public class ApplicationDbContext : DbContext
     {
-        // public DbSet<ItemsComprasEntity> itemsCompras { get; set; }
+        public DbSet<ListaComprasEntity> ListaCompras { get; set; }
+        public DbSet<ItensListaComprasEntity> ItensListaCompras { get; set; }
         public DbSet<CategoriasEntity> Categorias { get; set; }
         public DbSet<ProdutosEntity> Produtos { get; set; }
         

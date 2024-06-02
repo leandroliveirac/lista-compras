@@ -1,0 +1,36 @@
+@if(!exibirItens){
+  <div class="">
+    <button mat-mini-fab color="primary"
+    aria-label="Example icon button with a menu icon"
+    (click)="openDialog()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <mat-list role="list" *ngIf = "listas$ | async as listas, else loading">
+    <div mat-subheader>Minhas Listas</div>
+    <mat-list-item *ngFor="let item of listas">
+
+      <mat-icon matListItemIcon>summarize</mat-icon>
+      <div matListItemTitle (click)="mostrarItens($event)">
+        <input type="hidden" name="idLista" value="{{item.id}}">
+        <span>{{item.nome}}</span>
+      </div>
+      <!-- <div matListItemLine>{{item.criadoEm}}</div> -->
+
+    </mat-list-item>
+  </mat-list>
+
+  <ng-template #loading>
+    <div class="loading-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+}
+@else
+{
+  <button mat-mini-fab color="primary" (click)="ocultarItens()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <app-itens-compra [idListaCompra]="idLista"></app-itens-compra>
+}

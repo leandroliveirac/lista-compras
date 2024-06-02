@@ -3,12 +3,17 @@ h1 {
     margin-top: 0.5rem;
 }
 
-.botoes {
-    text-align: center;
-    margin-top: 1rem;
-    cursor: pointer;
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;    
 }
 
-a {
-    text-decoration: none;
+.card {
+    min-width: 150px;
+    min-height: 150px;
+    cursor: pointer;
 }

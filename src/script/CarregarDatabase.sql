@@ -27,7 +27,19 @@ SELECT
     C.descricao,
     P.id_produto,
     P.descricao
-
 FROM categorias C
 INNER JOIN produtos P
 ON C.id_categoria = P.id_categoria
+
+
+
+Insert into `listaCompras`(create_time,descricao)
+VALUES(NOW(),'teste1'),(NOW(),'teste2'),(NOW(),'teste3'),(NOW(),'teste4')
+
+SELECT
+    * 
+FROM listaCompras
+
+SELECT COUNT(*)
+      FROM `produtos` AS `p`
+      WHERE `p`.`id_produto` IN (1, 3577)

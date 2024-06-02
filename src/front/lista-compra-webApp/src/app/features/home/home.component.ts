@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    MatDividerModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

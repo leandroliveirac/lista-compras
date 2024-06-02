@@ -8,5 +8,7 @@ namespace ListaCompras.API.Domain.Entities
         }
 
         public string Descricao { get; set; } = string.Empty;
+
+        public ICollection<ProdutosEntity>? Produtos { get; set; }
     }
 }

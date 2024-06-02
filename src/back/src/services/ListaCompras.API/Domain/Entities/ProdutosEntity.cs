@@ -11,6 +11,7 @@ namespace ListaCompras.API.Domain.Entities
         public string Descricao { get; set; } = string.Empty;
         public int IdCategoria { get; set; }
 
+        public CategoriasEntity? Categoria { get; set; }
 
     }
 }

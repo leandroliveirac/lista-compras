@@ -9,9 +9,11 @@ namespace ListaCompras.API.Configuration.IoC
     {
         public static IServiceCollection Register(this IServiceCollection services)
         {
-            services.AddScoped<IItensComprasService,ItensComprasService>();
+            services.AddScoped<IListaComprasService,ListaComprasService>();
 
-            services.AddScoped<IITensComprasRepository, ItensComprasRepository>();
+            services.AddScoped<IListaComprasRepository, ListaComprasRepository>();
+            services.AddScoped<IItensListaCompraRepository, ItensListaCompraRepository>();
+            services.AddScoped<IProdutosRepository, ProdutosRepository>();
             
             return services;
         }

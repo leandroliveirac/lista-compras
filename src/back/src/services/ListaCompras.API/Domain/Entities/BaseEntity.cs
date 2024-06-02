@@ -7,6 +7,7 @@ namespace ListaCompras.API.Domain.Entities
         protected BaseEntity() { }
 
         public int Id { get; set; }
+        public DateTime CriadoEm { get; set; } = DateTime.Now;
 
     }
 }

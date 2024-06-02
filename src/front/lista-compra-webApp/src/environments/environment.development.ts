@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    // baseUrl: "http://127.0.0.1:5041/"
-    baseUrl: "https://api-lista-compras.azurewebsites.net/"
+    baseUrl: "http://127.0.0.1:5041/"
+    // baseUrl: "https://api-lista-compras.azurewebsites.net/"
 };

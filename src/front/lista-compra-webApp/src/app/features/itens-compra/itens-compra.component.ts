@@ -1,4 +1,4 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Renderer2, ViewChild, input } from '@angular/core';
 import {MatTable, MatTableDataSource,MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -16,8 +16,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   selector: 'app-itens-compra',
   standalone: true,
   imports: [
-    MatFormFieldModule, 
-    MatInputModule, 
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     MatCardModule,
     MatIconModule,
@@ -29,28 +29,23 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   templateUrl: './itens-compra.component.html',
   styleUrl: './itens-compra.component.scss'
 })
-export class ItensCompraComponent {
+export class ItensCompraComponent implements OnInit{
 
   constructor(private renderer: Renderer2, private listaComprasService: ListaComprasService) {}
 
-  private source : Itens[] = [];
+  @Input() idListaCompra: number = 0;
 
-  total: number = 0;  
+  ngOnInit(): void {
+    this.dataSource$ = this.carregarListaCompra();
+  }
+
+  total: number = 0;
 
   displayedColumns: string[] = ['categoria', 'produto', 'quantidade', 'valorUnitario', 'subTotal','acoes'];
 
-  dataSource  = new MatTableDataSource<Itens>(); 
-  
-  dataSource$ : Observable<MatTableDataSource<Itens>> = this.listaComprasService.obterItensCompra()
-    .pipe (
-      map( resp => {
-        this.source = resp;
-        const dataSource = this.dataSource;        
-        dataSource.data = this.source;
-        return dataSource;
-      }),
-      take(1)
-    );
+  private dataSource  = new MatTableDataSource<Itens>();
+
+  dataSource$ : Observable<MatTableDataSource<Itens>> | undefined;
 
   @ViewChild(MatTable)
   table!: MatTable<Itens>;
@@ -58,6 +53,19 @@ export class ItensCompraComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  private carregarListaCompra()
+  {
+    return this.listaComprasService.obterItensLista(this?.idListaCompra ?? 0)
+    .pipe (
+      map( resp => {
+        const dataSource = this.dataSource;
+        dataSource.data = resp;
+        return dataSource;
+      }),
+      take(1)
+    );
   }
 
   limparDados(event: Event) {
@@ -79,7 +87,7 @@ export class ItensCompraComponent {
 
     const tableRow = el.closest('tr');
 
-    const itemId = this.obterItemId(tableRow);    
+    const itemId = this.obterItemId(tableRow);
 
     const quant = this.obterValorInputQuantidade(tableRow);
 
@@ -92,7 +100,7 @@ export class ItensCompraComponent {
     this.AtualizarObjSource(itemId, quant, valorUnitario, subTotal);
 
   }
-  
+
   private alterarValorElementSubTotal(tableRow: HTMLTableRowElement | null, valor: number = 0) : void
   {
     if(tableRow === null) return;
@@ -103,15 +111,15 @@ export class ItensCompraComponent {
   }
 
   private AtualizarObjSource(itemId: number, quant: number, valorUnitario: number, subTotal: number) {
-    
-    this.source.map((obj) => {
-      if (parseInt(obj.id) == itemId) {
+
+    this.dataSource.data.map((obj) => {
+      if (parseInt(obj.idItem) == itemId) {
         obj.quantidade = quant;
         obj.valorUnitario = valorUnitario,
           obj.subTotal = subTotal;
-      }      
+      }
     });
-    
+
     this.CalcularTotal();
   }
 
@@ -142,7 +150,7 @@ export class ItensCompraComponent {
     const input = tableRow?.querySelectorAll('td')[3].querySelector('input') as HTMLInputElement;
 
     const valor = parseFloat(input?.value ?? '0');
-    
+
     return isNaN(valor) ? 0 : valor;
   }
 
@@ -168,7 +176,7 @@ export class ItensCompraComponent {
   {
     this.total = 0;
 
-    this.source.forEach((obj) => {
+    this.dataSource.data.forEach((obj) => {
       this.total += isNaN(obj.subTotal) ? 0 : obj.subTotal
     });
   }
