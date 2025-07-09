@@ -4,9 +4,9 @@ namespace ListaCompras.API.Domain.Interfaces.Repositories
 {
     public interface IItensListaCompraRepository : IBaseRepository<ItensListaComprasEntity>
     {
-        Task<IEnumerable<ItensListaComprasEntity>> ObterPorIdLista(int idLista);
-        Task<int> Inserir(IEnumerable<ItensListaComprasEntity> itens);
-        Task<int> ExcluirItens(int idLista, int[] idsItens);
-        Task<int> ExcluirTodosItens(int idLista);
+        Task<List<ItensListaComprasEntity>?> ObterPorIdListaAsync(int idLista);
+        Task<int> InserirAsync(IEnumerable<ItensListaComprasEntity> itens);
+        Task<int> ExcluirItensAsync(int idLista, int[] idsItens);
+        Task<int> ExcluirTodosItensAsync(int idLista);
     }
 }

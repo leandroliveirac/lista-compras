@@ -17,47 +17,59 @@ namespace ListaCompras.API.Domain.Services
             _itensListaCompraRepository = itensListaCompraRepository;
             _produtosRepository = produtosRepository;
         }
-        public async IAsyncEnumerable<ListaCompraResponseDTO> Listar()
+        public async Task<List<ListaCompraResponseDTO>?> ListarAsync()
         {
-            var items = await _listaComprasRepository.Listar();
+            var items = await _listaComprasRepository.ListarAsync();
+
+            if (items is null) return null;
+
+            List<ListaCompraResponseDTO> lista = new(items.Count());
 
             foreach (var item in items)
             {
-                yield return new ListaCompraResponseDTO{
+                lista.Add(new ListaCompraResponseDTO{
                     Id = item.Id,
                     Nome = item.Descricao
-                };
-            }            
+                });
+            }
+
+            return lista;
         }
 
-        public async IAsyncEnumerable<ItensListaCompraResponseDTO> ListarItens(int idLista)
+        public async Task<List<ItensListaCompraResponseDTO>?> ListarItensAsync(int idLista)
         {
-            var items = await _listaComprasRepository.ListarItens(idLista);
+            var items = await _listaComprasRepository.ListarItensAsync(idLista);
+
+            if(items is null || !items.Any()) return null;
+
+            List<ItensListaCompraResponseDTO> lista = new(items.Count());
 
             foreach (var item in items)
             {
-                yield return item;
+                lista.Add(item);
             }
+
+            return lista;
         }
 
-        public async Task<int> Gerar(ListaComprasRequestDTO listaComprasRequest)
+        public async Task<int> GerarAsync(ListaComprasRequestDTO listaComprasRequest)
         {
             var idsProdutos = listaComprasRequest.IdsProdutos.ToArray();
 
             if(idsProdutos is null || idsProdutos.Length == 0) return 0;
 
-            var existeProdutos = await _produtosRepository.Existe(idsProdutos);
+            var existeProdutos = await _produtosRepository.ExisteAsync(idsProdutos);
 
             if(!existeProdutos) return 0;            
 
-            var existeDescricao = await _listaComprasRepository.ExisteDescricao(listaComprasRequest.Nome);
+            var existeDescricao = await _listaComprasRepository.ExisteDescricaoAsync(listaComprasRequest.Nome);
 
             var descricao = existeDescricao ? string.Concat(listaComprasRequest.Nome,"-",Guid.NewGuid().ToString().Substring(0,8)) : listaComprasRequest.Nome;
 
             var listaCompras = new ListaComprasEntity(descricao);
-            var r1 = await _listaComprasRepository.Inserir(listaCompras);       
+            var r1 = await _listaComprasRepository.InserirAsync(listaCompras);       
 
-            var r2 = await _itensListaCompraRepository.Inserir(ItensListaCompras(listaCompras.Id,listaComprasRequest.IdsProdutos.ToArray()));
+            var r2 = await _itensListaCompraRepository.InserirAsync(ItensListaCompras(listaCompras.Id,listaComprasRequest.IdsProdutos.ToArray()));
 
             return r1 > 0 && r2 > 0 ? listaCompras.Id : 0;
         }
@@ -72,42 +84,42 @@ namespace ListaCompras.API.Domain.Services
                 };
             }
         }
-        public async Task<int> AdicionarItens(int idLista, int[] idsProdutos)
+        public async Task<int> AdicionarItensAsync(int idLista, int[] idsProdutos)
         {
 
             if(idsProdutos.Length <= 0) return 0;
 
-            var existeProdutos = await _produtosRepository.Existe(idsProdutos);
+            var existeProdutos = await _produtosRepository.ExisteAsync(idsProdutos);
 
             if(!existeProdutos) return 0;            
 
-            var r2 = await AdicionarItensLista(idLista,idsProdutos.Distinct().ToArray());
+            var r2 = await AdicionarItensListaAsync(idLista,idsProdutos.Distinct().ToArray());
 
             return r2 > 0 ? 1 : 0;
 
         }
 
-        public async Task<int> AtualizarDescricao(int idLista, string novaDescricao)
+        public async Task<int> AtualizarDescricaoAsync(int idLista, string novaDescricao)
         {
             var lista = new ListaComprasEntity(idLista);
             lista.DefinirDescricao(novaDescricao);
 
-            return await _listaComprasRepository.Atualizar(lista);
+            return await _listaComprasRepository.AtualizarAsync(lista);
         }
 
-        public async Task<int> Excluir(int idLista)
+        public async Task<int> ExcluirAsync(int idLista)
         {
-            return await _listaComprasRepository.Excluir(idLista);
+            return await _listaComprasRepository.ExcluirAsync(idLista);
         }
 
-        public async Task<int> ExluirItens(int idLista, int[] idsItens)
+        public async Task<int> ExluirItensAsync(int idLista, int[] idsItens)
         {
-            return await _itensListaCompraRepository.ExcluirItens(idLista,idsItens);
+            return await _itensListaCompraRepository.ExcluirItensAsync(idLista,idsItens);
         }
 
-        private async Task<int> AdicionarItensLista(int idLista, int [] idsProdustos)
+        private async Task<int> AdicionarItensListaAsync(int idLista, int [] idsProdustos)
         {
-            var itens = await _itensListaCompraRepository.ObterPorIdLista(idLista);
+            var itens = await _itensListaCompraRepository.ObterPorIdListaAsync(idLista);
 
             if(itens is null) return 0;
 
@@ -115,7 +127,7 @@ namespace ListaCompras.API.Domain.Services
 
             if(novoProdutos is null || !novoProdutos.Any()) return 0;
 
-            return await _itensListaCompraRepository.Inserir(ItensListaCompras(idLista,idsProdustos));
+            return await _itensListaCompraRepository.InserirAsync(ItensListaCompras(idLista,idsProdustos));
 
         }        
     }

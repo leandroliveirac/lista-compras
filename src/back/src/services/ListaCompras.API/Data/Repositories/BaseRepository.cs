@@ -14,7 +14,7 @@ namespace ListaCompras.API.Data.Repositories
             _context = context;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> Listar()
+        public virtual async Task<IEnumerable<TEntity>> ListarAsync()
         {
             return await _context.Set<TEntity>()
                                     .AsNoTracking()

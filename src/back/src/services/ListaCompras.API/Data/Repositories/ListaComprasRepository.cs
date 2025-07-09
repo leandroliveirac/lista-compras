@@ -16,7 +16,7 @@ namespace ListaCompras.API.Data.Repositories
             _connection = _context.Database.GetDbConnection();
         }        
 
-        public override async Task<IEnumerable<ListaComprasEntity>> Listar()
+        public override async Task<IEnumerable<ListaComprasEntity>> ListarAsync()
         {
             string sql = @"SELECT 
                             id_lista_compras Id, 
@@ -25,7 +25,7 @@ namespace ListaCompras.API.Data.Repositories
             return await _connection.QueryAsync<ListaComprasEntity>(sql);
         }
 
-        public async Task<IEnumerable<ItensListaCompraResponseDTO>> ListarItens(int idLista)
+        public async Task<IEnumerable<ItensListaCompraResponseDTO>> ListarItensAsync(int idLista)
         {
             string sql = @"select 
                                 ic.id_itens_lista_compras IdItem
@@ -51,36 +51,36 @@ namespace ListaCompras.API.Data.Repositories
 
         }
 
-        public async Task<int> Inserir(ListaComprasEntity listaCompras)
+        public async Task<int> InserirAsync(ListaComprasEntity listaCompras)
         {
             await _context.ListaCompras.AddAsync(listaCompras);
 
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Atualizar(ListaComprasEntity listaCompras)
+        public async Task<int> AtualizarAsync(ListaComprasEntity listaCompras)
         {
             _context.ListaCompras.Update(listaCompras);
 
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Excluir(int id)
+        public async Task<int> ExcluirAsync(int id)
         {
-            var obj = await ObterPorId(id).FirstOrDefaultAsync();
+            var obj = await ObterPorIdAsync(id).FirstOrDefaultAsync();
 
             if(obj is not null) _context.ListaCompras.Remove(obj);
 
            return await _context.SaveChangesAsync();
         }
         
-        private IQueryable<ListaComprasEntity> ObterPorId(int id)
+        private IQueryable<ListaComprasEntity> ObterPorIdAsync(int id)
         {
             return _context.ListaCompras.Include(x => x.Itens)
                                 .Where(l => l.Id == id);
         }
 
-        public async Task<bool> ExisteDescricao(string descricao)
+        public async Task<bool> ExisteDescricaoAsync(string descricao)
         {
             return await _context.ListaCompras.AnyAsync(x => x.Descricao.Equals(descricao));
         }

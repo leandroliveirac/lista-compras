@@ -21,7 +21,7 @@ namespace ListaCompras.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
-            var itens = _listaComprasService.Listar();
+            var itens = await _listaComprasService.ListarAsync();
 
             return itens is null ? NotFound() : Ok(itens);
         }
@@ -29,7 +29,7 @@ namespace ListaCompras.API.Controllers
         [HttpGet("{idLista:int}/listar-itens")]
         public async Task<IActionResult> ListarItens(int idLista)
         {
-            var itens = _listaComprasService.ListarItens(idLista);
+            var itens = await _listaComprasService.ListarItensAsync(idLista);
 
             return itens is null ? NotFound() : Ok(itens);
         }
@@ -37,7 +37,7 @@ namespace ListaCompras.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Gerar([FromBody] ListaComprasRequestDTO listaComprasRequest)
         {
-            var retorno = await _listaComprasService.Gerar(listaComprasRequest);
+            var retorno = await _listaComprasService.GerarAsync(listaComprasRequest);
             
             return retorno > 0? Ok(new {idLista = retorno}) : BadRequest();
         }
@@ -45,7 +45,7 @@ namespace ListaCompras.API.Controllers
         [HttpPost("{idLista}/adicionar-itens")]
         public async Task<IActionResult> AdicionarItens(int idLista, [FromBody, Required] int[] idsProdutos)
         {
-            var retorno = await _listaComprasService.AdicionarItens(idLista,idsProdutos);
+            var retorno = await _listaComprasService.AdicionarItensAsync(idLista,idsProdutos);
             
             return retorno > 0? Ok() : BadRequest();
         }
@@ -53,7 +53,7 @@ namespace ListaCompras.API.Controllers
         [HttpPut("{idLista}/atualizar-descricao")]
         public async Task<IActionResult> AtualizarDescricao(int idLista, [FromBody, Required] string NovaDescricao)
         {
-            var retorno = await _listaComprasService.AtualizarDescricao(idLista, NovaDescricao);
+            var retorno = await _listaComprasService.AtualizarDescricaoAsync(idLista, NovaDescricao);
 
             return retorno > 0? Ok() : BadRequest();
         }
@@ -61,7 +61,7 @@ namespace ListaCompras.API.Controllers
         [HttpDelete("{idLista}")]
         public async Task<IActionResult> Excluir(int idLista)
         {
-            var retorno = await _listaComprasService.Excluir(idLista);
+            var retorno = await _listaComprasService.ExcluirAsync(idLista);
             
             return retorno > 0? Ok() : BadRequest();
         }
@@ -69,7 +69,7 @@ namespace ListaCompras.API.Controllers
         [HttpDelete("{idLista}/excluir-itens")]
         public async Task<IActionResult> Excluir(int idLista,[FromBody, Required] int[] idsItens)
         {
-            var retorno = await _listaComprasService.ExluirItens(idLista,idsItens);
+            var retorno = await _listaComprasService.ExluirItensAsync(idLista,idsItens);
             
             return retorno > 0? Ok() : BadRequest();
         }

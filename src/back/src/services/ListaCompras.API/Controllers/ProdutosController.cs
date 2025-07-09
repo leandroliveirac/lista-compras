@@ -17,7 +17,7 @@ namespace ListaCompras.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
-            var result = await _produtosRepository.Listar();
+            var result = await _produtosRepository.ListarAsync();
 
             return Ok(result);
         }

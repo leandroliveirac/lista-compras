@@ -11,19 +11,19 @@ namespace ListaCompras.API.Data.Repositories
         {
         }
 
-        public override async Task<IEnumerable<ProdutosEntity>> Listar()
-        {
-            return _context.Produtos.AsNoTracking().AsEnumerable();
-        }
+        // public override async Task<IEnumerable<ProdutosEntity>> ListarAsync()
+        // {
+        //     return await _context.Produtos.AsNoTracking().ToListAsync();
+        // }
 
-        public async Task<bool> Existe(IEnumerable<int> ids)
+        public async Task<bool> ExisteAsync(IEnumerable<int> ids)
         {
-            int quant = await ObterPorIds(ids).CountAsync();
+            int quant = await ObterPorIdsAsync(ids).CountAsync();
 
             return quant == ids.Count();
         }
 
-        private IQueryable<ProdutosEntity> ObterPorIds(IEnumerable<int> ids)
+        private IQueryable<ProdutosEntity> ObterPorIdsAsync(IEnumerable<int> ids)
         {
             return _context.Produtos
                     .AsNoTracking()
